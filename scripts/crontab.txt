@@ -1,0 +1,42 @@
+# ==============================================================================
+# Crontab Configuration for Usage Snapshot Automation (Q2)
+# ==============================================================================
+#
+# 1. Jadwal Eksekusi: 3 kali sehari pada pukul 08:00, 12:00, 15:00 WIB (Asia/Jakarta)
+# 2. Format Crontab:
+#    ┌───────────── Menit (0 - 59)
+#    │ ┌─────────── Jam (0 - 23)
+#    │ │ ┌───────── Hari dalam bulan (1 - 31)
+#    │ │ │ ┌─────── Bulan (1 - 12)
+#    │ │ │ │ ┌───── Hari dalam minggu (0 - 6) (0 = Minggu)
+#    │ │ │ │ │
+#    * * * * * perintah_yang_dijalankan
+#
+# ==============================================================================
+# OPSI A: Jika server menggunakan Timezone WIB (Asia/Jakarta / UTC+7)
+# ==============================================================================
+# Menjalankan script snapshot setiap 08:00, 12:00, dan 15:00 WIB:
+0 8,12,15 * * * /usr/bin/python3 /path/to/PMT_test/scripts/create_snapshot.py >> /path/to/PMT_test/scripts/cron_snapshot.log 2>&1
+
+# Menjalankan script pembersihan snapshot > 30 hari setiap tengah malam (00:00 WIB):
+0 0 * * * /usr/bin/python3 /path/to/PMT_test/scripts/cleanup_snapshots.py >> /path/to/PMT_test/scripts/cron_cleanup.log 2>&1
+
+
+# ==============================================================================
+# OPSI B: Jika server menggunakan Timezone UTC
+# ==============================================================================
+# Konversi WIB (UTC+7) ke UTC:
+# - 08:00 WIB = 01:00 UTC
+# - 12:00 WIB = 05:00 UTC
+# - 15:00 WIB = 08:00 UTC
+#
+# 0 1,5,8 * * * /usr/bin/python3 /path/to/PMT_test/scripts/create_snapshot.py >> /path/to/PMT_test/scripts/cron_snapshot.log 2>&1
+# 0 17 * * * /usr/bin/python3 /path/to/PMT_test/scripts/cleanup_snapshots.py >> /path/to/PMT_test/scripts/cron_cleanup.log 2>&1
+
+
+# ==============================================================================
+# OPSI C: Menggunakan deklarasi CRON_TZ (Didukung di sebagian besar Linux cron)
+# ==============================================================================
+# CRON_TZ=Asia/Jakarta
+# 0 8,12,15 * * * /usr/bin/python3 /path/to/PMT_test/scripts/create_snapshot.py >> /path/to/PMT_test/scripts/cron_snapshot.log 2>&1
+# 0 0 * * * /usr/bin/python3 /path/to/PMT_test/scripts/cleanup_snapshots.py >> /path/to/PMT_test/scripts/cron_cleanup.log 2>&1
