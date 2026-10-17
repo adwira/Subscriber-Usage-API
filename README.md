@@ -26,7 +26,6 @@ This repository contains the implementation and documentation for the four techn
 6. [Q4: JavaScript Reduce Bug Analysis & Fix](#q4-javascript-reduce-bug-analysis--fix)
    - [Root Causes](#root-causes)
    - [Fixed Implementation](#fixed-implementation)
-   - [Long-Term Prevention Strategy](#long-term-prevention-strategy)
 
 ---
 
@@ -34,10 +33,10 @@ This repository contains the implementation and documentation for the four techn
 
 | Task | Topic | Tech Stack | Location |
 |---|---|---|---|
-| **Q1** | Subscriber Usage API | FastAPI, Pydantic v2, In-Memory Store, CORS | [`./usage-record-service`](./usage-record-service) |
+| **Q1** | Subscriber Usage API | FastAPI, Pydantic v2, In-Memory Store| [`./usage-record-service`](./usage-record-service) |
 | **Q2** | Snapshot & Cleanup Scripts | Python 3 Standard Library, Crontab | [`./scripts`](./scripts) |
 | **Q3** | SQL Queries | ANSI SQL (PostgreSQL / MySQL compatible) | [`./subscriber & usage.sql`](./subscriber%20&%20usage.sql) |
-| **Q4** | Code Troubleshooting | JavaScript ES6+ / TypeScript | Documented below |
+| **Q4** | Code Troubleshooting | JavaScript / TypeScript | Documented below |
 
 ---
 
@@ -46,7 +45,6 @@ This repository contains the implementation and documentation for the four techn
 ```text
 .
 ├── README.md                          # Primary technical documentation (this file)
-├── DOKUMENTASI.md                     # Technical reference notes
 ├── subscriber & usage.sql             # SQL solutions for Q3
 ├── scripts/                           # Automation scripts for Q2
 │   ├── README.md                      # Detailed script documentation
@@ -97,7 +95,6 @@ The in-memory storage is defined in [`./usage-record-service/app/store.py`](./us
 
 Design choices:
 - Authentication is omitted per requirements. The `subscriberId` is supplied in the request body (the schema accepts both `subscriberId` and `subscriber_id`).
-- Each new record automatically gets an ISO 8601 UTC timestamp if none is provided.
 - Input validation in [`./usage-record-service/app/models.py`](./usage-record-service/app/models.py) ensures metrics (`callMinutes`, `smsCount`, `dataUsageMB`) cannot be negative numbers (`ge=0`).
 
 ### Modular Calculation Functions
