@@ -415,6 +415,33 @@ function getTotalUsageMB(records = []) {
   }, 0);
 }
 ```
+---
 
+### Long-Term Prevention Strategy
+To prevent this class of bug from reaching production:
 
+1. **Linter Rules (ESLint)**:
+   Add the following rules to `.eslintrc.json`:
+   - `array-callback-return`: Enforces return statements in callbacks of array methods (`reduce`, `map`, `filter`).
+```javascript
+   // eslint.config.js (ESLint v9+; use .eslintrc.json on older versions)
+   export default [{ rules: { "array-callback-return": "error" } }];
+```
+2. **TypeScript / Static Type Checking**:
+   Define strict models so that missing properties and return types are flagged at compile time:
+   ```typescript
+   interface UsageRecord {
+     callMinutes: number;
+     smsCount: number;
+     dataUsageMB: number;
+     timestamp?: string;
+   }
+   function getTotalUsageMB(records: UsageRecord[] = []): number {
+     return records.reduce<number>((total, record) => total + (record.dataUsageMB), 0);
+   }
+   ```
+3. **Unit tests and CI:** Cover empty, single-element, and multi-element arrays.
+   The multi-element test fails immediately against the original code
+   (`undefined` instead of a number). Run lint, `tsc --noEmit`, and the tests in
+   CI on every pull request so these checks cannot be skipped.
 ---
